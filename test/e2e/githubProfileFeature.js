@@ -1,11 +1,20 @@
 describe('Gitgub Profile Finder', function() {
-  it('finds profiles', function() {
-    browser.get('http://localhost:8080');
+	var searchBox = element(by.model('searchTerm'));
+	var searchButton = element(by.className('btn'));
 
-    element(by.model('searchTerm')).sendKeys('spike01');
-    element(by.className('btn')).click();
+	beforeEach(function() {
+		browser.get('http://localhost:8080');
+	});
 
-    expect(element(by.binding('user.login')).getText())
-      .toEqual('spike01');
+	it('has a title', function() {
+      expect(browser.getTitle()).toEqual('Github user search');
+	});
+
+    it('finds the last Spike', function() {
+      searchBox.sendKeys('spike');
+      searchButton.click();
+
+      var profiles = element.all(by.repeater('user in searchResult.items'));
+      expect(profiles.last().getText()).toEqual('spike01');
   });
 });
